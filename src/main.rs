@@ -1,4 +1,5 @@
 use rayon::prelude::*;
+use rand::seq::IteratorRandom;
 #[derive(Clone)]
 struct Node<'a> { // all Nodes should be in the same lifetime
     towards: Vec<&'a i32>, // Node is pointing towards
@@ -75,10 +76,34 @@ fn main(){
 
     // puts all the nodes in 1 place
     let mut _simple_graph = vec![_a.clone(),_b.clone(),_c.clone(),_d.clone(),_e.clone(),_f.clone(),_g.clone()];
-
+    let number_of_nodes : Vec<i32> = (0..64).collect();
+    let big_graph = create_graph(64, &number_of_nodes);
     //==============================================================================
     println!("{:?}",page_rank(&_simple_graph, 1000));
+    println!("{:?}",page_rank(&big_graph,2));
 }
+
+fn create_graph<'a>(nodes: i32, numberOfNodes: &Vec<i32>) -> Vec<Node> {
+    let mut RandomIterator = rand::thread_rng();
+    let mut node_vector: Vec<Node> = vec![];
+    let mut numberOfNodesTowards;
+    let mut numberOfNodesFrom;
+    for i in 0..nodes {
+        // get random number of nodes
+        numberOfNodesTowards = (1..nodes-1).choose(&mut RandomIterator);
+        numberOfNodesFrom = (1..nodes-1).choose(&mut RandomIterator);
+        node_vector.push(
+            Node {
+                towards: (1..nodes-1).choose_multiple(&mut RandomIterator, numberOfNodesTowards.unwrap() as usize).iter().clone().map(|x| numberOfNodes.get(*x as usize).unwrap()).collect(), // choose a random number of nodes, no duplicates
+                from: (1..nodes-1).choose_multiple(&mut RandomIterator, numberOfNodesFrom.unwrap() as usize).iter().clone().map(|x| numberOfNodes.get(*x as usize).unwrap()).collect(), // choose a random number of nodes, no duplicates
+                value: i,
+                pagerank: 0.0,
+            }
+        );
+    }
+    return node_vector;
+}
+
 /**
  * function takes in a vector of nodes and a number n for iterations
  * returns the values (names) in order of rank
