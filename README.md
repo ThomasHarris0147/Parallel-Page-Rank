@@ -5,7 +5,7 @@ I did this or a parallel class project\
 
 non parallel page rank tests
 |----|
-|1329|1|
+|1329|1|  
 |1279|2|
 |1369|3|
 |1337|4|
