@@ -30,3 +30,9 @@ parallel page rank tests
 |328|9|
 |334|10|
 Average 339.5
+----
+the code could run faster using more primative ways.\ 
+my code used to use a separate vector in the main function to hold the page ranks compared to having the nodes hold the page rank\
+in that case it would run 100x faster\
+However, the method I used was this way\
+made coding this much faster\
