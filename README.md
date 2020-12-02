@@ -14,6 +14,7 @@ non parallel page rank tests/
 |1293|8|
 |1187|9|
 |1418|10|
+|----|--|
 Average 1324
 parallel
 337 1
