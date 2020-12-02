@@ -4,6 +4,7 @@ I did this or a parallel class project\
 ![equation](https://latex.codecogs.com/gif.latex?Pagerank%28A%29_j%20%3D%20%5Csum_%7BB%3Dnodes%20%5Cmapsto%20A%20%7D%20%5Cleft%20%28%5Cfrac%7BPagerank%28B%29_i%7D%7BNumberOfNodesBPointsTo%7D%20%5Cright%29)\
 
 non parallel page rank tests/
+|----|-|
 |1329|1|
 |1279|2|
 |1369|3|
@@ -14,7 +15,6 @@ non parallel page rank tests/
 |1293|8|
 |1187|9|
 |1418|10|
-|----|--|
 Average 1324
 parallel
 337 1
