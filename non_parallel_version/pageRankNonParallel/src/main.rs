@@ -1,4 +1,3 @@
-use rayon::prelude::*;
 use rand::seq::IteratorRandom;
 use std::time::{Duration, Instant};
 #[derive(Clone)]
@@ -11,7 +10,7 @@ struct Node<'a> { // all Nodes should be in the same lifetime
 
 fn main(){
     /*//==============================simple graph=====================================
-    let mut _a = Node { 
+    let mut _a = Node {
         towards: vec![],
         from: vec![],
         value: 1,
@@ -76,20 +75,22 @@ fn main(){
     _g.from = vec![];    // infact it has no connections. I only added it to see what happens ┌༼◉ل͟◉༽┐
 
     // puts all the nodes in 1 place
-    let mut _simple_graph = vec![_a.clone(),_b.clone(),_c.clone(),_d.clone(),_e.clone(),_f.clone(),_g.clone()];*/
+    let mut _simple_graph = vec![_a.clone(),_b.clone(),_c.clone(),_d.clone(),_e.clone(),_f.clone(),_g.clone()];
+    */
     let number_of_nodes : Vec<i32> = (0..100).collect();
     let big_graph = create_graph(100, &number_of_nodes);
     //==============================================================================
     //println!("{:?}",page_rank(&_simple_graph, 1000));
-    println!("parallel");
+    println!("non parallel");
     let now = Instant::now();
     page_rank(&big_graph,100);
     println!("{}", now.elapsed().as_millis());
 }
 
+
 /**
  * function that takes the number of nodes you want.
- * then a vector of i32 which is basically the names of the nodes. (names ofcourse being the values)
+ * then a vector of i32 which is basically the values of the nodes. (names ofcourse being the numbers)
  */
 fn create_graph<'a>(nodes: i32, number_of_nodes: &Vec<i32>) -> Vec<Node> {
     let mut random_iterator = rand::thread_rng();
@@ -113,7 +114,6 @@ fn create_graph<'a>(nodes: i32, number_of_nodes: &Vec<i32>) -> Vec<Node> {
                 pagerank: 0.0,
             }
         );
-        //println!("{:?}",number_of_nodes[i]);
     }
     return node_vector;
 }
@@ -127,13 +127,22 @@ fn page_rank(_object: &Vec<Node>, n: i32) -> Vec<i32>{
     // for PageRank of A in iteration i+1 = 
     //         sum of { n = nodes pointing to A}
     //         ( PageRank of n in iteration i / number of nodes n points to )
-    let mut temp_object = _object.clone();
-    temp_object.par_iter_mut().for_each(|x| x.pagerank = 1.0/(_object.len() as f32)); // the first iteration sets it all equal
+    let mut temp_object: Vec<Node> = _object.clone(); // our current iteration
+    for i in 0.._object.len(){
+        temp_object[i].pagerank = 1.0/(_object.len() as f32);
+    }
     let mut _prev_iter: Vec<Node>; // previous iteration
     // ========================================DO PAGE RANK====================================================
+    let mut index: i32;
+    let mut temp_value: f32;
     for _iteration in 0..n {
         _prev_iter = temp_object.clone(); // set previous iteration
-        temp_object.par_iter_mut().for_each(|x| x.pagerank = do_page_rank(x,&_object, &_prev_iter));
+        index = 0; // used to index the objects in _to_compare (to set the objects in the current index)
+        for node in _object {
+            temp_value = do_page_rank(&node, _object, &_prev_iter); // calculate using the formulae
+            temp_object[index as usize].pagerank = temp_value; // reset the value
+            index = index + 1;
+        }
     }
     // ========================================================================================================
     let mut _to_compare : Vec<f32> = vec![0.0; temp_object.len()]; // create a vector which will hold the pagerank of each node
@@ -165,7 +174,6 @@ fn page_rank(_object: &Vec<Node>, n: i32) -> Vec<i32>{
     //println!("{:?}", for_fun);
     return to_return;
 }
-
 // there is probably a better way todo this but alas monkey brain has got the better of me
 // check if the nodes index in the correct order already exists in to_return
 // if not. add it. if yes. ignore it.
