@@ -33,6 +33,7 @@ Average 339.5
 ----
 the code could run faster using more primative ways.\ 
 my code used to use a separate vector in the main function to hold the page ranks compared to having the nodes hold the page rank\
-in that case it would run 100x faster\
+in that case it would run much much faster\
 However, the method I used was this way\
-made coding this much faster\
+Also I couldnt figure out how to parallel iterate through all nodes and update the pagerank vector using ^ method.\
+hence I stuck with each node holding the pagerank\
